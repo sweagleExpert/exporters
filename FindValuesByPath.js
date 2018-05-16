@@ -1,3 +1,8 @@
+/** Validates that keys exists under given path and have the given value
+ * Argument1 : path.keyName=value  : example : gbl20026724/aggregator/default.enable-frtb-rad=false
+ * Argument2: path.keyname=value : example : gbl20026724/riskserver/default.enable-frtb-rad=false
+ */
+
 var values = [];
 var found = false;
 

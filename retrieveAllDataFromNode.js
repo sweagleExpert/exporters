@@ -22,7 +22,7 @@ if (args[0]!=null) {
   retrieveAllData(metadataset, args[0]);
 }
 else {
-  return "ERROR: no keyName provided"; 
+  return metadataset; 
 }
 
 

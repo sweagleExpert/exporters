@@ -17,7 +17,7 @@ for (var i = 0; i < args.length; i++) {
 	}
 	// if not valid return error message
 	else {
-		return "ERROR: path not found";
+		return "ERROR: path not found: " + args[i];
 	}
 // keep looping through the provided arguments.
 // when last node is reached, subset contains the data we are looking for

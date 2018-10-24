@@ -8,7 +8,7 @@
 // Inputs are
 //    - list of keys that represents the path to extract
 //
-// Creator:   Anastacia and Dimitris for customer POC
+// Creator:   Anastasia and Dimitris for customer POC
 // Version:   1.1
 //
 var subset = metadataset;

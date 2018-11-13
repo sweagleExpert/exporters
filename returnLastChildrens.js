@@ -1,4 +1,5 @@
-//
+// description: Return the last nodes names in a MetaDataSet
+
 // returnLastChildrens.js
 // Exporter to return the last nodes in a MetaDataSet
 // Last nodes are identified by the fact they have no childrens

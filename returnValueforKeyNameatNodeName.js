@@ -1,14 +1,16 @@
+// description: Return value for key in specific node
+
 var subset = metadataset;
- 
+
 var found = [];
 var uniqueKeyname = [];
 var nodeFound = 0;
- 
+
 /**
  * returnValue function searches the whole metadataset to find the MDI value for a given MDI keyName at the given nodeName.
- * mds must be the given metadataset, args must be the nodeNAme, args1 must be the keyName
+ * mds must be the given metadataset, args must be the nodeName, args1 must be the keyName
  */
- 
+
 function returnValue(mds, args, args1) {
   for (var item in mds) {
     // check if the key has a value or points to an object
@@ -16,7 +18,7 @@ function returnValue(mds, args, args1) {
       //check if the node equals to the search term
       if (args === item) {
         nodeFound++;
-        subset = mds[item]; 
+        subset = mds[item];
         //check if the node has a key equal to the search term
         if (subset.hasOwnProperty(args1)) {
           found.push(subset[args1]);
@@ -27,11 +29,11 @@ function returnValue(mds, args, args1) {
     }
   }
 }
- 
- 
- 
- 
- 
+
+
+
+
+
 // here we call our function
 if (args[0] != null && args[1] != null) {
   returnValue(metadataset, args[0], args[1]);
@@ -39,7 +41,7 @@ if (args[0] != null && args[1] != null) {
 else {
   return "ERROR: no keyName or nodeName provided";
 }
- 
+
 //If the nodeName does not exist, return error
 if (nodeFound === 0){
   return "ERROR: nodeName not found";
@@ -62,6 +64,6 @@ for (var i=0; i<found.length; i++) {
 if (uniqueKeyname.length > 1) {
   return "ERROR: " + uniqueKeyname.length +" different values are found";
 }
- 
+
 return found[0];
 }

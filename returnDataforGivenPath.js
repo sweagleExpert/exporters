@@ -1,13 +1,15 @@
-// Exporter to return all data (= all MDI and all childNodes + their MDIs
+// description: Return all data for a given path
+
+// Exporter to return all data (= all MDI and all childNodes + their MDIs)
 //
-// provide as arguments all nodes that when combined provide the exact path for which 
-// all data needs to be retrieved. 
-// Each nodeName in the path must be provided as a seperate argument value
+// provide as arguments all nodes that when combined provide the exact path for which
+// all data needs to be retrieved.
+// Each nodeName in the path must be provided as a separate argument value
 // When no argument is provided then ALL data from the metadata set is returned
 
 var subset = metadataset;
 
-// we loop through all provided arguments (= nodeNames in the path) and check if the path exist 
+// we loop through all provided arguments (= nodeNames in the path) and check if the path exist
 // when we get to the last argument we return whole metadataset at that last nodeName.
 
 for (var i = 0; i < args.length; i++) {

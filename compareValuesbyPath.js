@@ -1,3 +1,5 @@
+// description: Validates that keys exists under given path and have the given value
+
 /** Validates that keys exists under given path and have the given value
  * Argument1 : path.keyName=value  : example : gbl20026724/aggregator/default.enable-frtb-rad=false
  * Argument2: path.keyname=value : example : gbl20026724/riskserver/default.enable-frtb-rad=false
@@ -54,4 +56,4 @@ if (values.includes(false)) {
 }
 else {
 	return true;
-}	
+}

@@ -1,4 +1,6 @@
-/** This exporter takes as argument a full path and keyName and returns the value 
+// description: Return value for key in MDS
+
+/** This exporter takes as argument a full path and keyName and returns the value
  * Argument : path.keyName  : example : PRD1/infra/server03/IP
  */
 
@@ -20,7 +22,7 @@ function findValues (mds, pathSteps) {
             }
         }
         else if ( i === pathSteps.length -1) {
-            
+
             if (subset.hasOwnProperty(pathSteps[i])) {
                 value = subset[pathSteps[i]];
             }
@@ -52,4 +54,4 @@ if (nodePathNotFound === true) {
 if (keyNotFound === true) {
     return 'error: keyName not found';
 }
-return value; 
+return value;

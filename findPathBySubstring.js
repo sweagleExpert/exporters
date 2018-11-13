@@ -1,3 +1,5 @@
+// description: Find path by substring
+
 var subset = {};
 var nodesWithSameName = 0;
 var keysWithSameName = 0;
@@ -33,10 +35,10 @@ function findSubstring (mds, args, args1) {
           break;
         }
       }
-      findSubstring (mds[item], args, args1); 
+      findSubstring (mds[item], args, args1);
       fullPath = fullPath.split(item).join('');
       fullPath = fullPath.slice(0, -1);
-    } 
+    }
   }
 }
 

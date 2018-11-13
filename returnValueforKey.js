@@ -1,3 +1,5 @@
+// description: Return value for key
+
 /** Find out the value for a specific key that is provided as an argument
 * in case keyName is not found - return error
 * in case keyName is found multiple times - return error
@@ -32,12 +34,12 @@ function findObjectKeys(mds, searchKey) {
   }
 }
 
-// call the function to find the keyName and return the value 
+// call the function to find the keyName and return the value
 if (args[0]!=null) {
   findObjectKeys(metadataset, args[0]);
 }
 else {
-  return "ERROR: no keyName provided";  
+  return "ERROR: no keyName provided";
 }
 
 // return the result or error message

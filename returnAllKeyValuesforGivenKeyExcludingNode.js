@@ -1,3 +1,5 @@
+// description: Return all values for a given key excuding specific node
+
 //first argument is either a full keyName : default.calculation-value-attributes.element
 //or a value for keyNames ending with the value: **element
 //
@@ -15,8 +17,8 @@ function findSubstring (mds, partKeyName, excludedNode) {
   for (var item in mds) {
     if  (typeof (mds[item]) === "object" && excludedNode.includes(item) === false) {
       fullPath = fullPath +"/" + item;
-      findSubstring (mds[item], partKeyName, excludedNode); 
-      
+      findSubstring (mds[item], partKeyName, excludedNode);
+
     fullPath = fullPath.split('/').slice(0,-1).join('/') ;
     }
     else if (typeof (mds[item]) !== "object") {

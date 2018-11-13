@@ -1,4 +1,5 @@
-//
+// description: Return a specific path in an OpenShift Template file format
+
 // returnOpenshiftTemplate.js
 // Exporter to return a specific path in an OpenShift Template file format
 //

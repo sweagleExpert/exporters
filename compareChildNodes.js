@@ -1,3 +1,5 @@
+// description: Compare two paths to check if they have same keys
+
 //provide 2 full path node names as arguments
 //example MaRS2Workshop/PTE/gbl20026723/aggregator
 //
@@ -13,7 +15,7 @@ var firstNode = findNodeByPath( path1Steps , metadataset );
 var secondNode = findNodeByPath( path2Steps , metadataset );
 
 if (firstNode.outcome === true && secondNode.outcome === true) {
-    
+
     var firstNodeKeys = Object.keys(firstNode.data);
     var secondNodeKeys = Object.keys(secondNode.data);
     var diffs = [];
@@ -33,7 +35,7 @@ if (firstNode.outcome === true && secondNode.outcome === true) {
     else {
         return diffs;
     }
-    
+
 }
 else if (firstNode.outcome === true && secondNode.outcome === false) {
     return 'Path of Node 2 is wrong!';
@@ -46,7 +48,7 @@ else if (firstNode.outcome === false && secondNode.outcome === false) {
 }
 
 function findNodeByPath( pathSteps , metadataset ) {
-    
+
     var subset = {};
     var found1 = true;
     for (var i = 0; i < pathSteps.length; i++ ) {
@@ -69,7 +71,7 @@ function findNodeByPath( pathSteps , metadataset ) {
             }
         }
     }
-    
+
     if (found1 === false) {
         return { outcome : false };
     }

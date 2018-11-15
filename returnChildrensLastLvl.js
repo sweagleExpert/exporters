@@ -1,6 +1,6 @@
 // description: Return names of nodes that are the last in terms of hierarchy level
 
-// returnLastLvlChildrens.js
+// returnChildrensLastLvl.js
 // Exporter to return the last nodes in a MetaDataSet
 // Last nodes are identified by the fact they have no childrens
 //

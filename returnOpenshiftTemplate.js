@@ -10,25 +10,28 @@
 //    - list of keys that represents the path to extract
 //
 // Creator:   Anastasia and Dimitris for customer POC
-// Version:   1.1
+// Version:   1.2 - get the first node result
 //
 var subset = metadataset;
+var repeatedNode = 0;
 
-// we loop through all provided arguments (= nodeNames in the path) and check if the path exist
-// when we get to the last argument we return whole metadataset at that last nodeName.
-for (var i = 0; i < args.length; i++) {
+function retrieveAllData(obj, args) {
 
-    // check if path is valid and if so store all data in subset
-    if (subset.hasOwnProperty(args[i]) === true) {
-        subset = subset[args[i]];
+  for (var item in obj) {
+    if (typeof(obj[item]) === 'object') {
+      // search for arg item and stop when found first one
+      if (args === item) {
+        repeatedNode = repeatedNode + 1;
+        subset = obj[item];
+        break;
+      }
+      else {
+        retrieveAllData(obj[item], args);
+      }
     }
-    // if not valid return error message
-    else {
-        return "ERROR: path not found: " + args[i];
-    }
+  }
 }
 
-// function to transform a node from Object to Array
 function mapObjectsToArray( subKey ) {
     var returnedArray = [];
     for (var item in subset[subKey]) {
@@ -37,14 +40,22 @@ function mapObjectsToArray( subKey ) {
     subset[subKey] = returnedArray;
 }
 
-// Now than subset has been calculated,
-// transform some keys into arrays to be compliant with OpenShift template format
-if (subset.hasOwnProperty('objects')) {
+
+if (args[0]!=null) {
+  retrieveAllData(metadataset, args[0]);
+  if (subset.hasOwnProperty('objects')) {
     mapObjectsToArray('objects');
-}
-
-if (subset.hasOwnProperty('parameters')) {
+  }
+  if (subset.hasOwnProperty('parameters')) {
     mapObjectsToArray('parameters');
+  }
+}
+else {
+  return "ERROR: no keyName provided";
 }
 
-return subset;
+if (repeatedNode === 0) {
+  return "ERROR: keyname not found";
+} else {
+  return subset;
+}

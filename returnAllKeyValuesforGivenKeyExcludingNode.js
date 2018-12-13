@@ -1,4 +1,4 @@
-// description: Return all values for a given key excuding specific node
+// description: Return all values for a given key excluding specific node
 
 //first argument is either a full keyName : default.calculation-value-attributes.element
 //or a value for keyNames ending with the value: **element

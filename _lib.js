@@ -103,6 +103,6 @@ function mapObjectsToArray( mds, subKey ) {
 
 //return getKeyValueByName(metadataset, "shutdown");
 //return getValueByName(metadataset, "shutdown");
-//return getValueByPath(metadataset, "AIRBUS,infrastructure,switches,3650_adm_durci,model3650,interface,GigabitEthernet1/0/2");
-//return getValueByPath(metadataset, "AIRBUS,infrastructure,switches,3650_adm_durci,model3650,interface,GigabitEthernet1/0/2,shutdown");
+//return getValueByPath(metadataset, "MY-APP,infrastructure,switches,model3650,interface,GigabitEthernet1/0/2");
+//return getValueByPath(metadataset, "MY-APP,infrastructure,switches,model3650,interface,GigabitEthernet1/0/2,shutdown");
 return flattenSubset(metadataset, flatSubset);

@@ -86,7 +86,7 @@ findObjectKeys(metadataset);
 
 if (maxValue !== "") {
   var finalMaxValue = maxValue.split(body);
-  for (var i=1; i<groupSize+1; i++) {
+  for (var i=0; i<groupSize; i++) {
       finalMaxValue[1] = parseInt(finalMaxValue[1]) + offset;
       if (padSize > 0) {
         var returnValue = body + pad(finalMaxValue[1],padSize);

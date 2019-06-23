@@ -7,7 +7,8 @@
 //    - regex of pattern to search for or keyword of pattern
 //    keywords list are : ip for next ip address, index to search for next integer
 //    - (optional) pad[0-9] = search for next index with left padding with specified number of 0
-//    - (optional) offset[0-9] = integer to add to max value found for result calculation (default is 1)
+//    - (optional) offset[(-9)-0-9] = integer to add to max value found for result calculation (default is 1)
+//              if offset is negative, it will search for min instead of max value
 //    - (optional) group[0-9] = number of values to return
 //
 // ex: if you want the next hostname following values in model "hostprd000 hostprd010  horstprd020",
@@ -71,8 +72,15 @@ function findObjectKeys(mds) {
         } else {
           var tempValue = mds[item].split(body);
           var tempValue2 = maxValue.split(body);
-          if (parseInt(tempValue[1])>parseInt(tempValue2[1])) {
-            maxValue = mds[item];
+          // If offset is negative, search for min instead of max
+          if (offset >0) {
+              if (parseInt(tempValue[1])>parseInt(tempValue2[1])) {
+                maxValue = mds[item];
+              }
+          } else {
+              if (parseInt(tempValue[1])<parseInt(tempValue2[1])) {
+                maxValue = mds[item];
+              }
           }
         }
       }

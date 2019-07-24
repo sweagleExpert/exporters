@@ -16,9 +16,8 @@ for (var i = 0; i < args.length; i++) {
     	// check if path is valid and if so store all data in subset
 	if (subset.hasOwnProperty(args[i]) === true) {
 		subset = subset[args[i]];
-	}
+	} else {
 	// if not valid return error message
-	else {
 		return "ERROR: path not found: " + args[i];
 	}
 // keep looping through the provided arguments.

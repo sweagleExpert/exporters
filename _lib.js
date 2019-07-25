@@ -15,6 +15,29 @@ function flattenSubset(mds, flatSubset) {
   return flatSubset;
 }
 
+
+// Return only keys+values of a metadataset, removing all nodes object
+// the extract format is a flat list including the node path in name
+return flattenSubsetWithPath(metadataset, {})
+
+function flattenSubsetWithPath(mds, flatSubset, prefix=[], level=0, pathSeparator=".") {
+  for (var item in mds) {
+      if (typeof (mds[item]) === "object") {
+          prefix[level] = item;
+          flatSubset = flattenSubsetWithPath(mds[item], flatSubset, prefix, level+1);
+      } else {
+          var pre=prefix[0];
+          for (var i=1; i<level;i++) {
+              pre = pre + pathSeparator + prefix[i];
+          }
+          //var pre = prefix.join(pathSeparator);
+          flatSubset[pre+pathSeparator+item] = mds[item];
+      }
+  }
+  return flatSubset;
+}
+
+
 // Return the value of a specific key based on its name
 // nodes are not taken into account
 // If multiple keys with same name, the first value found is returned
@@ -63,8 +86,7 @@ function getValueByName(mds, name) {
 // Return the value of a specific key based on its complete path
 // If the key is a node, then it returns a subset
 // If not found, then "ERROR: NOT FOUND" is returned
-function getValueByPath(mds, path) {
-  var pathSeparator = ',';
+function getValueByPath(mds, path, pathSeparator = ',') {
   var pathSteps =  path.split(pathSeparator);
   var subset = mds;
   for (var i = 0; i < pathSteps.length; i++ ) {

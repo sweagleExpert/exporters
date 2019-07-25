@@ -30,7 +30,6 @@ function flattenSubsetWithPath(mds, flatSubset, prefix=[], level=0, pathSeparato
           for (var i=1; i<level;i++) {
               pre = pre + pathSeparator + prefix[i];
           }
-          //var pre = prefix.join(pathSeparator);
           flatSubset[pre+pathSeparator+item] = mds[item];
       }
   }

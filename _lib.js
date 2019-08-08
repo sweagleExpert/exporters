@@ -1,9 +1,16 @@
 // description: Library of common functions that you can copy and paste into your own parser
 
+// TEST YOUR RESULT HERE
+//return getKeyValueByName(metadataset, "shutdown");
+//return getValueByName(metadataset, "shutdown");
+//return getValueByPath(metadataset, "MY-APP,infrastructure,switches,model3650,interface,GigabitEthernet1/0/2");
+//return getValueByPath(metadataset, "MY-APP,infrastructure,switches,model3650,interface,GigabitEthernet1/0/2,shutdown");
+//return flattenSubset(metadataset, flatSubset);
+return flattenSubsetWithPath(metadataset, {})
+
 
 // Return only keys+values of a metadataset, extracting all nodes object
 // the extract format is a flat list
-var flatSubset = {};
 function flattenSubset(mds, flatSubset) {
   for (var item in mds) {
       if (typeof (mds[item]) === "object") {
@@ -18,8 +25,6 @@ function flattenSubset(mds, flatSubset) {
 
 // Return only keys+values of a metadataset, removing all nodes object
 // the extract format is a flat list including the node path in name
-return flattenSubsetWithPath(metadataset, {})
-
 function flattenSubsetWithPath(mds, flatSubset, prefix=[], level=0, pathSeparator=".") {
   for (var item in mds) {
       if (typeof (mds[item]) === "object") {
@@ -119,11 +124,3 @@ function mapObjectsToArray( mds, subKey ) {
     mds[subKey] = returnedArray;
     return subKey;
 }
-
-// TEST YOUR RESULT HERE
-
-//return getKeyValueByName(metadataset, "shutdown");
-//return getValueByName(metadataset, "shutdown");
-//return getValueByPath(metadataset, "MY-APP,infrastructure,switches,model3650,interface,GigabitEthernet1/0/2");
-//return getValueByPath(metadataset, "MY-APP,infrastructure,switches,model3650,interface,GigabitEthernet1/0/2,shutdown");
-return flattenSubset(metadataset, flatSubset);

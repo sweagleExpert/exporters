@@ -6,7 +6,7 @@
 //
 // This exporter is useful if level X nodes represents different files of a confiquration
 // You use first this exporter to get list of nodes=files,
-// Then you use retrieveAllDataFromNode to get the different configuration files
+// Then you use returnDataForNode to get the different configuration files
 //
 // Inputs : Integer representing level to export (1, 2, ...)
 // Outputs are: Array of children nodes names

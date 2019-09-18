@@ -6,7 +6,7 @@
 //
 // This exporter is useful if last nodes represents different files of a confiquration
 // You use first this exporter to get list of nodes=files,
-// Then you use retrieveAllDataFromNode to get the different configuration files
+// Then you use returnDataForNode to get the different configuration files
 //
 // No inputs except MDS to parse
 // Outputs are: Array of children nodes names
@@ -29,7 +29,7 @@ function checkChildrent( subset ) {
         if (typeof(subset[item]) === 'object') {
              if ( hasChildren(subset[item]) === true ) {
                  checkChildrent( subset[item] );
-             }else {
+             } else {
                  nodesFound.push(item);
              }
         }
@@ -40,7 +40,7 @@ for (var item in mds) {
     if (typeof(mds[item]) === 'object') {
          if ( hasChildren(mds[item]) === true ) {
              checkChildrent( mds[item] );
-         }else {
+         } else {
              nodesFound.push(item);
          }
     }

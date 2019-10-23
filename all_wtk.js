@@ -1,4 +1,4 @@
-// Return all key values with tokens in key or node names also calculated
+// description: Return all key values with tokens in key or node names also calculated
 var tokenSeparator = "@@";
 var regex = tokenSeparator+"(.*?)"+tokenSeparator;
 var globalRegex = new RegExp(regex,"g");

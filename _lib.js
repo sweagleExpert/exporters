@@ -124,3 +124,12 @@ function mapObjectsToArray( mds, subKey ) {
     mds[subKey] = returnedArray;
     return subKey;
 }
+
+
+// Returns objects.keys in lowercase
+function toLowerCaseKeys(obj) {
+  return Object.keys(obj).reduce(function(accum, key) {
+    accum[key.toLowerCase()] = obj[key];
+    return accum;
+  }, {});
+}

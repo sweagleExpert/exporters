@@ -12,20 +12,32 @@
 // Outputs are: Array of children nodes names
 //
 // Creator:   Anastasia and Dimitris for customer POC
-// Version:   1.0
+// Version:   1.1
 //
 var mds = metadataset;
 var nodesFound = [];
-var currentLevel = -1;
+var currentLevel = 0;
 var targetLevel = 0;
 
 if (args[0]!=null) {
   targetLevel = args[0];
-}
-else {
+} else {
   return "ERROR: no level provided";
 }
 
+for (var item in mds) {
+    if (typeof(mds[item]) === 'object') {
+      if (currentLevel == targetLevel) {
+        nodesFound.push(item);
+      } else {
+        if ( hasChildren(mds[item]) === true ) {
+            checkChildrent( mds[item] );
+        }
+      }
+    }
+}
+
+return nodesFound;
 
 // Check if provided subset has children
 function hasChildren(subset) {
@@ -34,6 +46,7 @@ function hasChildren(subset) {
   }
 }
 
+// Recursive function to export node at specific level
 function checkChildrent( subset ) {
     currentLevel = currentLevel + 1;
     for (var item in subset) {
@@ -49,18 +62,3 @@ function checkChildrent( subset ) {
     }
     currentLevel = currentLevel - 1;
 }
-
-currentLevel = currentLevel + 1;
-for (var item in mds) {
-    if (typeof(mds[item]) === 'object') {
-      if (currentLevel == targetLevel) {
-        nodesFound.push(item);
-      } else {
-        if ( hasChildren(mds[item]) === true ) {
-            checkChildrent( mds[item] );
-        }
-      }
-    }
-}
-
-return nodesFound;

@@ -9,6 +9,20 @@
 return flattenSubsetWithPath(metadataset, {})
 
 
+// Function to return all values matching a specific regex in an array
+function findValuesMatchingRegex(mds, regex, arr=[]) {
+  for (var item in mds) {
+    if  ( typeof(mds[item]) === "object") {
+      // If we are on a node call recursively the function
+      findValuesMatchingRegex (mds[item], regex, arr);
+    } else if (regex.test(mds[item]) ) {
+      if (! arr.includes(mds[item])) { arr.push(mds[item]); }
+    }
+  }
+  return arr;
+}
+
+
 // Return only keys+values of a metadataset, extracting all nodes object
 // the extract format is a flat list
 function flattenSubset(mds, flatSubset) {

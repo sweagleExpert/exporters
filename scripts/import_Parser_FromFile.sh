@@ -9,14 +9,14 @@ source $(dirname "$0")/sweagle.env
 ############# Output: 0 if no errors, 1 + Details of errors if any
 ##########################################################################
 if ! ([ -x "$(command -v python)" ] || [ -x "$(command -v jq)" ]) ; then
-  echo "********** ERROR: PYTHON or JQ IS REQUIRED FOR THIS SCRIPT"
+  echo "########## ERROR: PYTHON or JQ IS REQUIRED FOR THIS SCRIPT"
   exit 1
 fi
 
 if [ "$#" -lt "2" ]; then
-    echo "********** ERROR: NOT ENOUGH ARGUMENTS SUPPLIED"
-    echo "********** YOU SHOULD PROVIDE 1- PARSER FILENAME AND 2- PARSER TYPE"
-    echo "********** PARSER TYPE MUST BE EXPORTER, VALIDATOR OR TEMPLATE"
+    echo "########## ERROR: NOT ENOUGH ARGUMENTS SUPPLIED"
+    echo "########## YOU SHOULD PROVIDE 1- PARSER FILENAME AND 2- PARSER TYPE"
+    echo "########## PARSER TYPE MUST BE EXPORTER, VALIDATOR OR TEMPLATE"
     exit 1
 fi
 argSourceFile=$1
@@ -37,7 +37,7 @@ fi
 
 # Put json parsers list in variable parsersList
 function getParsers {
-  echo "*** Get parsers list"
+  echo "### Get parsers list"
   #For debug
   #echo "curl -s -X GET '$sweagleURL/api/v1/tenant/metadata-parser' -H 'Authorization: bearer $aToken' -H 'Accept: application/vnd.siren+json'"
   if [ "$argParserType" = "TEMPLATE" ]; then
@@ -50,8 +50,8 @@ function getParsers {
   if [[ -z $errorFound ]]; then
     parsersList="$response"
   else
-    echo -e "\n**********"
-    echo "*** Error getting parser list: $errorFound"
+    echo -e "\n###########"
+    echo "### Error getting parser list: $errorFound"
     exit 1
   fi
 }
@@ -71,7 +71,7 @@ parserName="$1" jsonValue="$2" python - <<EOF_PYTHON
 import json
 import os
 parserName = os.environ['parserName']
-#print("*** Use python to get Id for Parser "+parserName)
+#print("### Use python to get Id for Parser "+parserName)
 json1 = json.loads(os.environ['jsonValue'])
 for item in json1["entities"]:
   if item["properties"]["name"] == parserName:
@@ -85,7 +85,7 @@ function createParser {
   local argName=$1
   local argDescription=$2
   local argScript=$3
-  echo "*** Create parser with name: $argName"
+  echo "### Create parser with name: $argName"
   if [ "$argParserType" = "TEMPLATE" ]; then
     #for debug
     #echo "curl -s -X POST '$sweagleURL/api/v1/tenant/template-parser?name=$filename&parserType=$argParserType&errorDescriptionDraft=error+in+parser+$filename' --data-urlencode 'description=$argDescription' --data-urlencode 'template=$argScript' -H 'Authorization: bearer $aToken' -H 'Accept: application/vnd.siren+json'"
@@ -97,10 +97,10 @@ function createParser {
   errorFound=$(echo $response | jsonValue "error_description")
   if [[ -z $errorFound ]]; then
     parserId=$(echo "$response" | jsonValue "id")
-    echo "*** Created parser with id: $parserId"
+    echo "### Created parser with id: $parserId"
   else
-    echo -e "\n**********"
-    echo "*** Error creating parser: $errorFound"
+    echo -e "\n###########"
+    echo "### Error creating parser: $errorFound"
   fi
 }
 
@@ -109,7 +109,7 @@ function updateParser {
   local argId=$1
   local argDescription=$2
   local argScript=$3
-  echo "*** Update parser $argId"
+  echo "### Update parser $argId"
   # to debug
   #echo "curl -s -X POST '$sweagleURL/api/v1/tenant/metadata-parser/$argId' --data-urlencode 'description=$argDescription' --data-urlencode 'scriptDraft=$argScript' -H 'Authorization: bearer $aToken' -H 'Accept: application/vnd.siren+json'"
   if [ "$argParserType" = "TEMPLATE" ]; then
@@ -120,17 +120,17 @@ function updateParser {
   # Check if any error before continue
   errorFound=$(echo $response | jsonValue "error_description")
   if [[ -z $errorFound ]]; then
-    echo "*** Updated parser with id: $argId"
+    echo "### Updated parser with id: $argId"
   else
     echo -e "\n**********"
-    echo "*** Error updating parser: $errorFound"
+    echo "### Error updating parser: $errorFound"
   fi
 }
 
 function publishParser {
   local argId=$1
   local argScript=$2
-  echo "*** Publish parser with id: $argId"
+  echo "### Publish parser with id: $argId"
   if [ "$argParserType" = "TEMPLATE" ]; then
     response=$(curl -s -X POST "$sweagleURL/api/v1/tenant/template-parser/$argId/publish" --data-urlencode "template=$argScript" -H "Authorization: bearer $aToken" -H "Accept: application/vnd.siren+json" )
   else
@@ -138,15 +138,15 @@ function publishParser {
   fi
   errorFound=$(echo $response | jsonValue "error_description")
   if [[ -z $errorFound ]]; then
-    echo "*** Published parser $argId"
+    echo "### Published parser $argId"
   else
-    echo -e "\n**********"
-    echo "*** Error publishing parser: $errorFound"
+    echo -e "\n###########"
+    echo "### Error publishing parser: $errorFound"
   fi
 }
 
 function getNextParserId {
-  echo "*** Get parser list"
+  echo "### Get parser list"
   if [ "$argParserType" = "TEMPLATE" ]; then
     response=$(curl -s -X GET -H "Authorization: bearer $aToken" -H "Accept: application/vnd.siren+json" "$sweagleURL/api/v1/tenant/template-parser")
   else
@@ -159,15 +159,15 @@ function getNextParserId {
     parserId=$(echo $response | jsonValue "id")
     echo "Next parser Id is $parserId"
   else
-    echo -e "\n**********"
-    echo "*** Error getting parser list: $errorFound"
+    echo -e "\n###########"
+    echo "### Error getting parser list: $errorFound"
     exit 1
   fi
 }
 
 function deleteParser {
   local argId=$1
-  echo "*** Deleting parser $argId"
+  echo "### Deleting parser $argId"
   if [ "$argParserType" = "TEMPLATE" ]; then
     response=$(curl -s -X DELETE "$sweagleURL/api/v1/tenant/template-parser/$argId" -H "Authorization: bearer $aToken" -H "Accept: application/vnd.siren+json")
   else
@@ -176,16 +176,16 @@ function deleteParser {
   # Check if any error before continue
   errorFound=$(echo $response | jsonValue "error_description")
   if [[ -z $errorFound ]]; then
-    echo "*** Parser $argId deleted"
+    echo "### Parser $argId deleted"
   else
-    echo -e "\n**********"
-    echo "*** Error deleting parser: $errorFound"
+    echo -e "\n###########"
+    echo "### Error deleting parser: $errorFound"
     exit 1
   fi
 }
 
 
-echo -e "\n**********"
+echo -e "\n###########"
 createParser "$filename" "$description" "$fileContent"
 # Check if error returned because parser already exists
 if [[ $response == *"already exists"* ]]; then
@@ -197,7 +197,7 @@ fi
 if [[ ! -z $parserId ]]; then
   publishParser $parserId "$fileContent"
 else
-  echo -e "\n**********"
-  echo "*** ERROR CREATING PARSER: $filename"
+  echo -e "\n###########"
+  echo "### ERROR CREATING PARSER: $filename"
   exit 1
 fi

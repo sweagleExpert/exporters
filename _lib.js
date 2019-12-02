@@ -139,6 +139,34 @@ function mapObjectsToArray( mds, subKey ) {
     return subKey;
 }
 
+// Set the value of a specific key based on its name
+// nodes are not taken into account
+function setValueByName(mds, keyName, keyValue) {
+  for (var item in mds) {
+    // check if the key has a value or points to an object
+    if  (typeof (mds[item]) === "object") {
+      // if value is an object call recursively the function to search this subset of the object
+      value = setValueByName(mds[item], keyName, keyValue);
+    } else {
+      // check if the key equals to the search term, then set value
+      if (item === keyName ) { mds[item] = keyValue; }
+    }
+  }
+}
+
+
+// Set the value of a specific key based on its complete path
+function setValueByPath(mds, keyPath, , keyValue, pathSeparator = ',') {
+  var pathSteps =  keyPath.split(pathSeparator);
+  var subset = mds;
+  for (var i = 0; i < pathSteps.length; i++ ) {
+    if (subset.hasOwnProperty(pathSteps[i])) {
+      subset = subset[pathSteps[i]];
+    }
+  }
+  subset = keyValue;
+}
+
 
 // Returns objects.keys in lowercase
 function toLowerCaseKeys(obj) {

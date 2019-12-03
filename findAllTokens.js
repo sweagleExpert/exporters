@@ -1,9 +1,9 @@
 // description: Return all tokens used in a MDS, output.replace_tokens.enabled must be set to false in preferences
 
-// extractHosts.js
+// findAllTokens.js
 //
 // No inputs except MDS to parse
-// Outputs are: array of tokens found
+// Outputs are: array of tokens found with path if set to true
 //
 // Creator:   Anastasia, Dimitris for customer POC
 // Version:   1.0

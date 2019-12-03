@@ -17,7 +17,7 @@ function replaceKeyTokens(mds) {
         if (item.match(regex)) {
             var itemReplaced = item;
             // Get list of matches
-            var matches = item.match(globalRegex)
+            var matches = item.match(globalRegex);
             for (var index in matches) {
                // console.log("match="+matches[index]);
                 // Get only token value

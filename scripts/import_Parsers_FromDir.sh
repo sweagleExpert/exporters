@@ -32,6 +32,9 @@ elif [[ -d "$argSourceDir" ]] ; then
   for file in *.js; do
     $sweagleScriptDir/import_Parser_FromFile.sh "$file" "$argParserType"
   done
+  for file in *.py; do
+    $sweagleScriptDir/import_Parser_FromFile.sh "$file" "$argParserType"
+  done
 else
     echo "########## ERROR: Argument $argSourceDir is not a directory or file, exiting";
     exit 1

@@ -23,13 +23,17 @@ argSourceFile=$1
 argParserType=$2
 parserId=""
 
-#filename without path and .js extension for import
-filename=$(basename "$argSourceFile" ".js")
+#filename without path and extension for import
+#filename=$(basename "$argSourceFile" ".js")
+filename=$(basename "$argSourceFile")
+extension="${filename##*.}"
+filename="${filename%.*}"
+
 fileContent=`cat $argSourceFile`
 
 #get description from firstline of file
 read -r firstline<$argSourceFile
-if [[ $firstline == "// description:"* ]]; then
+if [[ $firstline == "// description:"* ]] || [[ $firstline == "# description:"* ]]; then
   description=$(echo $firstline| cut -d':' -f 2)
 else
   description="$filename"

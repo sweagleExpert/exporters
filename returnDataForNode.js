@@ -1,7 +1,7 @@
 // description: Return all data for a given UNIQUE node name
 // returnDataForNode.js
 //
-// Inputs are: the UNIQUE node name across assigned CDS
+// Inputs are: the UNIQUE node name across all assigned CDS
 //    Input type: an object arg containing a string
 // Outputs are: UNIQUE the data for the specific node name
 //    Output type: metadatasets
@@ -15,7 +15,9 @@
 // Copy the config datasets
 var subset = metadatasets;
 // Store all the config datasets
-var superCDS;
+var superCDS={};
+// Root node string used to concatenate all CDS in superCDS
+var rootNode="";
 // Number of occurences of the node name found witin the config datasets
 var nodesWithSameName = 0;
 // Defines the node name: placeholder of the provided argument node name
@@ -25,13 +27,14 @@ var errorFound = false;
 var errors = [];
 var errors_description = '';
 
-// HANDLERS 
+// HANDLERS
 // Inputs parser and checker
   // Input values in object notation
   // Checking the assigned metadasets and parse the node name from input values in object notation
   if (arg!=null && metadatasets!=null){
     for (var i=0; i<metadatasets.length; i++){
-      superCDS = metadatasets[i];
+      rootNode = Object.keys(metadatasets[i])[0];
+      superCDS[rootNode] = metadatasets[i][rootNode];
     }
     nodeName=objFormat(arg);
   } else {
@@ -53,7 +56,7 @@ function objFormat(obj) {
       return nodeName;
     }
     // XML
-  	else if (obj.match(xmlRegex)!=null) { 
+  	else if (obj.match(xmlRegex)!=null) {
       nodeName=obj.match(xmlRegex)[1];
       return nodeName;
     }
@@ -89,7 +92,7 @@ if (nodeName!=null && !errorFound) {
   errorFound=true;
     errors.push("ERROR: Inputs unexpected!, please provide an object notation (arg). Inputs variables list (args[]) is deprecated.");
 }
-// Return the list of all errors trapped 
+// Return the list of all errors trapped
 errors_description = errors.join(', ');
 return {description: errors_description, result:!errorFound};
 

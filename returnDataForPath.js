@@ -1,7 +1,7 @@
 // description: Return all data for a given node path
 // returnDataForPath.js
 //
-// Inputs are: the node path across assigned CDS
+// Inputs are: the node path across all assigned CDS
 //    Input type: an object arg containing a string,
 //                each node of the path must be separated by comma
 //                ex: {"nodepath":"rootnode,node1,node2"}
@@ -13,10 +13,10 @@
 // Support: Sweagle version >= 3.11
 
 // VARIABLES DEFINITION
-// Copy the config datasets
-var subset = metadatasets[0];
 // Store all the config datasets
-var superCDS;
+var superCDS={};
+// Root node string used to concatenate all CDS in superCDS
+var rootNode="";
 // Defines the node name: placeholder of the provided argument node name
 var nodePath = "";
 // Defines the path separator character used to split nodePath into array
@@ -34,7 +34,8 @@ var errors_description = '';
   // Checking the assigned metadatasets and parse the node name from input values in object notation
   if (arg!=null && metadatasets!=null){
     for (var i=0; i<metadatasets.length; i++){
-      superCDS = metadatasets[i];
+      rootNode = Object.keys(metadatasets[i])[0];
+      superCDS[rootNode] = metadatasets[i][rootNode];
     }
     nodePath=objFormat(arg);
   } else {
@@ -52,7 +53,6 @@ function objFormat(obj) {
     var yamlRegex='^.*\:\ (.*)$';
   	// JSON
     if (obj.match(jsonRegex)!=null) {
-      //return JSON.parse(obj);
       nodePath=obj.match(jsonRegex)[1];
       return nodePath;
     }
@@ -85,8 +85,8 @@ if (nodePath!=null && !errorFound) {
 	// when we get to the last argument we return whole metadataset at that last nodePath.
 	for (var i = 0; i < nodePathArray.length; i++) {
 	  // check if path is valid and if so store all data in subset
-		if (subset.hasOwnProperty(nodePathArray[i]) === true) {
-			subset = subset[nodePathArray[i]];
+		if (superCDS.hasOwnProperty(nodePathArray[i]) === true) {
+			superCDS = superCDS[nodePathArray[i]];
 		} else {
 			// if not valid return error message
 			errorFound=true;
@@ -101,5 +101,5 @@ if (errorFound) {
 	errors_description = errors.join(', ');
 	return {description: errors_description, result:!errorFound};
 } else {
-	return subset;
+	return superCDS;
 }

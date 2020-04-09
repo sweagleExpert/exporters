@@ -31,11 +31,11 @@ var errors_description = '';
 // HANDLERS
 // Inputs parser and checker
   // Input values in object notation
-  // Checking the assigned metadatasets and parse the node name from input values in object notation
-  if (arg!=null && metadatasets!=null){
-    for (var i=0; i<metadatasets.length; i++){
-      rootNode = Object.keys(metadatasets[i])[0];
-      superCDS[rootNode] = metadatasets[i][rootNode];
+  // Checking the assigned configdata sets and parse the node name from input values in object notation
+  if (arg!=null && cds!=null){
+    for (var i=0; i<cds.length; i++){
+      rootNode = Object.keys(cds[i])[0];
+      superCDS[rootNode] = cds[i][rootNode];
     }
     nodePath=objFormat(arg);
   } else {
@@ -45,7 +45,7 @@ var errors_description = '';
 
 // Parse the object notation: check upon against the RegEx format
 function objFormat(obj) {
-    // {"nodePath":"Value"}
+    // ["path1,node1","path2,node2"]
     var jsonRegex='^\{.*\"\:\"(.*)\"\}$';
     // <nodePath>Value</nodePath>
     var xmlRegex='^\<.*\>(.*)<\/.*\>$';

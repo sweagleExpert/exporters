@@ -4,7 +4,7 @@
 // Inputs are: the UNIQUE node name across all assigned CDS
 //    Input type: an object arg containing a string
 // Outputs are: UNIQUE the data for the specific node name
-//    Output type: metadatasets
+//    Output type: config datasets
 //
 // Creator: Dimtris
 // Maintainer: Cyrille
@@ -13,7 +13,7 @@
 
 // VARIABLES DEFINITION
 // Copy the config datasets
-var subset = metadatasets;
+var subset = cds;
 // Store all the config datasets
 var superCDS={};
 // Root node string used to concatenate all CDS in superCDS
@@ -30,11 +30,11 @@ var errors_description = '';
 // HANDLERS
 // Inputs parser and checker
   // Input values in object notation
-  // Checking the assigned metadasets and parse the node name from input values in object notation
-  if (arg!=null && metadatasets!=null){
-    for (var i=0; i<metadatasets.length; i++){
-      rootNode = Object.keys(metadatasets[i])[0];
-      superCDS[rootNode] = metadatasets[i][rootNode];
+  // Checking the assigned config datasets and parse the node name from input values in object notation
+  if (arg!=null && cds!=null){
+    for (var i=0; i<cds.length; i++){
+      rootNode = Object.keys(cds[i])[0];
+      superCDS[rootNode] = cds[i][rootNode];
     }
     nodeName=objFormat(arg);
   } else {
@@ -44,25 +44,25 @@ var errors_description = '';
 
 // Parse the object notation: check upon against the RegEx format
 function objFormat(obj) {
-    // {"nodeName":"Value"}
-    var jsonRegex='^\{.*\"\:\"(.*)\"\}$';
+    // ["Value1"]
+    var jsonRegex = new RegExp("\"(.*?)\"");
     // <nodeName>Value</nodeName>
-    var xmlRegex='^\<.*\>(.*)<\/.*\>$';
+    var xmlRegex = new RegExp("^\<.*\>(.*?)<\/.*\>$");
     // nodeName: Value
-    var yamlRegex='^.*\:\ (.*)$';
+    var yamlRegex = new RegExp("^.*\:\ (.*?)$");
   	// JSON
-    if (obj.match(jsonRegex)!=null) {
-      nodeName=obj.match(jsonRegex)[1];
+    if (jsonRegex.test(obj)) {
+      nodeName=jsonRegex.exec(obj)[1];
       return nodeName;
     }
     // XML
-  	else if (obj.match(xmlRegex)!=null) {
-      nodeName=obj.match(xmlRegex)[1];
+  	else if (xmlRegex.test(obj)) {
+      nodeName=xmlRegex.exec(obj)[1];
       return nodeName;
     }
     // YAML
-    else if (obj.match(yamlRegex)!=null) {
-      nodeName=obj.match(yamlRegex)[1];
+    else if (yamlRegex.test(obj)) {
+      nodeName=yamlRegex.exec(obj)[1];
       return nodeName;
      }
 	// Unexpected Inputs
@@ -83,7 +83,7 @@ if (nodeName!=null && !errorFound) {
     errors.push("ERROR: nodeName: "+nodeName+" not found");
     // If only one node name occurrance has been found returns the subset data
   } else if (nodesWithSameName === 1) {
-    return subset;
+    return subsets;
   } else {
     errorFound=true;
     errors.push("ERROR: multiple nodeNames: "+nodeName+" found");
@@ -105,7 +105,7 @@ function retrieveAllData(mds, nodevalue) {
       if (nodevalue === item) {
         nodesWithSameName = nodesWithSameName + 1;
         // Returns the config dataset for the current node name
-        subset = mds[item];
+        subsets = mds[item];
       } else {
         // Continue to search in the next node
         retrieveAllData(mds[item], nodevalue);

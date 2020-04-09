@@ -39,39 +39,38 @@ var errors_description = '';
     nodeName=objFormat(arg);
   } else {
     errorFound=true;
-    errors.push("ERROR: Inputs unexpected!, please provide an object notation (arg). Inputs variables list (args[]) is deprecated.");
+    errors.push("ERROR: No inputs provided! Please provide at least one cds and one arg in object notation.");
   }
 
 // Parse the object notation: check upon against the RegEx format
 function objFormat(obj) {
-    // ["Value1"]
-    var jsonRegex = new RegExp("\"(.*?)\"");
-    // <nodeName>Value</nodeName>
-    var xmlRegex = new RegExp("^\<.*\>(.*?)<\/.*\>$");
-    // nodeName: Value
-    var yamlRegex = new RegExp("^.*\:\ (.*?)$");
-  	// JSON
-    if (jsonRegex.test(obj)) {
-      nodeName=jsonRegex.exec(obj)[1];
-      return nodeName;
-    }
+  var valueToCheck;
+  // <nodeName>Value</nodeName>
+  var xmlRegex='^\<.*\>(.*)<\/.*\>$';
+  // ---
+  //nodeName: Value
+  var yamlRegex='^---\n.*\:\ (.*)$';
+  switch (obj.charAt(0)) {
+	  // JSON
+    case '{':
+    case '[':
+      var jsonObj=JSON.parse(obj);
+      for (var key in jsonObj) { valueToCheck = jsonObj[key]; }
+      return valueToCheck;
     // XML
-  	else if (xmlRegex.test(obj)) {
-      nodeName=xmlRegex.exec(obj)[1];
-      return nodeName;
-    }
+    case '<':
+      valueToCheck=obj.match(xmlRegex)[1];
+      return valueToCheck;
     // YAML
-    else if (yamlRegex.test(obj)) {
-      nodeName=yamlRegex.exec(obj)[1];
-      return nodeName;
-     }
-	// Unexpected Inputs
-  	else {
-    errorFound=true;
-    errors.push("ERROR: Inputs unexpected!, the arg object must contains an unique string");
-    }
+    case '-':
+      valueToCheck=obj.match(yamlRegex)[1];
+      return valueToCheck;
+    default:
+      errorFound=true;
+      errors.push("ERROR: Inputs unexpected!, please provide an object notation (arg). Inputs variables list (args[]) is deprecated.");
   }
-
+}
+//console.log("nodeName="+nodeName);
 // MAIN
 // If the node name has been correctly parsed without any error detected so far!
 if (nodeName!=null && !errorFound) {
@@ -81,9 +80,9 @@ if (nodeName!=null && !errorFound) {
   if (nodesWithSameName === 0) {
     errorFound=true;
     errors.push("ERROR: nodeName: "+nodeName+" not found");
-    // If only one node name occurrance has been found returns the subset data
+    // If only one node name occurrence has been found returns the subset data
   } else if (nodesWithSameName === 1) {
-    return subsets;
+    return subset;
   } else {
     errorFound=true;
     errors.push("ERROR: multiple nodeNames: "+nodeName+" found");
@@ -105,7 +104,7 @@ function retrieveAllData(mds, nodevalue) {
       if (nodevalue === item) {
         nodesWithSameName = nodesWithSameName + 1;
         // Returns the config dataset for the current node name
-        subsets = mds[item];
+        subset = mds[item];
       } else {
         // Continue to search in the next node
         retrieveAllData(mds[item], nodevalue);

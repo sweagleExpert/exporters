@@ -45,33 +45,33 @@ var errors_description = '';
 
 // Parse the object notation: check upon against the RegEx format
 function objFormat(obj) {
-    // ["path1,node1","path2,node2"]
-    var jsonRegex='^\{.*\"\:\"(.*)\"\}$';
-    // <nodePath>Value</nodePath>
-    var xmlRegex='^\<.*\>(.*)<\/.*\>$';
-    // nodePath: Value
-    var yamlRegex='^.*\:\ (.*)$';
-  	// JSON
-    if (obj.match(jsonRegex)!=null) {
-      nodePath=obj.match(jsonRegex)[1];
-      return nodePath;
-    }
+  var valueToCheck;
+  // <nodeName>Value</nodeName>
+  var xmlRegex='^\<.*\>(.*)<\/.*\>$';
+  // ---
+  //nodeName: Value
+  var yamlRegex='^---\n.*\:\ (.*)$';
+  switch (obj.charAt(0)) {
+	  // JSON
+    case '{':
+    case '[':
+      var jsonObj=JSON.parse(obj);
+      for (var key in jsonObj) { valueToCheck = jsonObj[key]; }
+      return valueToCheck;
     // XML
-  	else if (obj.match(xmlRegex)!=null) {
-      nodePath=obj.match(xmlRegex)[1];
-      return nodePath;
-    }
+    case '<':
+      valueToCheck=obj.match(xmlRegex)[1];
+      return valueToCheck;
     // YAML
-    else if (obj.match(yamlRegex)!=null) {
-      nodePath=obj.match(yamlRegex)[1];
-      return nodePath;
-     }
-	// Unexpected Inputs
-  	else {
-    errorFound=true;
-    errors.push("ERROR: Inputs unexpected!, the arg object must contains an unique string");
-    }
+    case '-':
+      valueToCheck=obj.match(yamlRegex)[1];
+      return valueToCheck;
+    default:
+      errorFound=true;
+      errors.push("ERROR: Inputs unexpected!, please provide an object notation (arg). Inputs variables list (args[]) is deprecated.");
   }
+}
+//console.log("nodePath="+nodePath);
 
 //console.log(subset);
 //console.log("nodePath="+nodePath);

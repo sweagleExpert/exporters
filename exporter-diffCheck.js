@@ -1,3 +1,4 @@
+// description: Check diff between two nodes
 var result = { modified: [], missing: [] };
 if (args.length !== 2) {
   return 'Please enter two paths!';

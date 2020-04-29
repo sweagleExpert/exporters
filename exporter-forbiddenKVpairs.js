@@ -1,4 +1,4 @@
-//This exporter searches the primary CDS for forbidden key-value pairs (contained in the secondary CDS)
+// description: This exporter searches the primary CDS for forbidden key-value pairs (contained in the secondary CDS)
 var res = true;
 var list = [];
 

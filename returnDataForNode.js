@@ -29,18 +29,23 @@ var errors_description = '';
 
 // HANDLERS
 // Inputs parser and checker
+if (args[0]!=null) {
+  // Input value in old notation (for retro compatibility)
+  nodeName=args[0];
+} else if (arg!=null && arg!="") {
   // Input values in object notation
   // Checking the assigned config datasets and parse the node name from input values in object notation
-  if (arg!=null && cds!=null){
-    for (var i=0; i<cds.length; i++){
-      rootNode = Object.keys(cds[i])[0];
-      superCDS[rootNode] = cds[i][rootNode];
-    }
-    nodeName=objFormat(arg);
-  } else {
-    errorFound=true;
-    errors.push("ERROR: No inputs provided! Please provide at least one cds and one arg in object notation.");
-  }
+  nodeName=objFormat(arg);
+} else {
+  // If no input is provided then return main cds (for retro compatibility)
+  return cds[0];
+  //errorFound=true;
+  //errors.push("ERROR: No inputs provided! Please provide at least one cds and one arg in object notation.");
+}
+for (var i=0; i<cds.length; i++){
+  rootNode = Object.keys(cds[i])[0];
+  superCDS[rootNode] = cds[i][rootNode];
+}
 
 // Parse the object notation: check upon against the RegEx format
 function objFormat(obj) {
@@ -89,25 +94,25 @@ if (nodeName!=null && !errorFound) {
   }
 } else {
   errorFound=true;
-    errors.push("ERROR: Inputs unexpected!, please provide an object notation (arg). Inputs variables list (args[]) is deprecated.");
+  errors.push("ERROR: Inputs unexpected!, please provide an object notation (arg). Inputs variables list (args[]) is deprecated.");
 }
 // Return the list of all errors trapped
 errors_description = errors.join(', ');
 return {description: errors_description, result:!errorFound};
 
-// FONCTIONS LIST
+// FUNCTIONS LIST
 // Recursive function to retrieve the node name and its all related data.
-function retrieveAllData(mds, nodevalue) {
-  for (var item in mds) {
-    if (typeof(mds[item]) === 'object') {
+function retrieveAllData(dataset, nodevalue) {
+  for (var item in dataset) {
+    if (typeof(dataset[item]) === 'object') {
       // If the current node equals the node name
       if (nodevalue === item) {
         nodesWithSameName = nodesWithSameName + 1;
         // Returns the config dataset for the current node name
-        subset = mds[item];
+        subset = dataset[item];
       } else {
-        // Continue to search in the next node
-        retrieveAllData(mds[item], nodevalue);
+        // Recursive search in the node
+        retrieveAllData(dataset[item], nodevalue);
       }
     }
   }

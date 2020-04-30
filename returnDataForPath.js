@@ -30,18 +30,23 @@ var errors_description = '';
 
 // HANDLERS
 // Inputs parser and checker
+// Checking the assigned configdata sets and parse the node name from input values in object notation
+if (args[0]!=null) {
+  // Input value in old notation (for retro compatibility)
+  nodePathArray=args;
+} else if (arg!=null && arg!="") {
   // Input values in object notation
-  // Checking the assigned configdata sets and parse the node name from input values in object notation
-  if (arg!=null && cds!=null){
-    for (var i=0; i<cds.length; i++){
-      rootNode = Object.keys(cds[i])[0];
-      superCDS[rootNode] = cds[i][rootNode];
-    }
-    nodePath=objFormat(arg);
-  } else {
-    errorFound=true;
-    errors.push("ERROR: Inputs unexpected!, please provide an object notation (arg). Inputs variables list (args[]) is deprecated.");
-  }
+  nodePath=objFormat(arg);
+  // transform string into array based on pathSeparator
+	nodePathArray=nodePath.split(pathSeparator);
+} else {
+  // If no input is provided then return main cds (for retro compatibility)
+  return cds[0];
+}
+for (var i=0; i<cds.length; i++){
+  rootNode = Object.keys(cds[i])[0];
+  superCDS[rootNode] = cds[i][rootNode];
+}
 
 // Parse the object notation: check upon against the RegEx format
 function objFormat(obj) {
@@ -71,16 +76,12 @@ function objFormat(obj) {
       errors.push("ERROR: Inputs unexpected!, please provide an object notation (arg). Inputs variables list (args[]) is deprecated.");
   }
 }
-//console.log("nodePath="+nodePath);
-
 //console.log(subset);
 //console.log("nodePath="+nodePath);
 
 // MAIN
 // If the node path has been correctly parsed without any error detected so far!
-if (nodePath!=null && !errorFound) {
-	// transform string into array based on pathSeparator
-	nodePathArray=nodePath.split(pathSeparator);
+if (nodePathArray!=null && !errorFound) {
 	// we loop through all provided arguments (= nodePaths in the path) and check if the path exist
 	// when we get to the last argument we return whole metadataset at that last nodePath.
 	for (var i = 0; i < nodePathArray.length; i++) {

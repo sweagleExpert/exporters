@@ -1,4 +1,4 @@
-// description: Return value for key in specific node
+// description: Return value for key in specific node given by its name
 
 var subset = metadataset;
 

@@ -35,7 +35,7 @@ if (args[0]!=null) {
 } else if (arg!=null && arg!="") {
   // Input values in object notation
   // Checking the assigned config datasets and parse the node name from input values in object notation
-  nodeName=objFormat(arg);
+  nodeName=objFormat(arg.trim());
 } else {
   // If no input is provided then return main cds (for retro compatibility)
   return cds[0];

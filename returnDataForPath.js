@@ -36,7 +36,7 @@ if (args[0]!=null) {
   nodePathArray=args;
 } else if (arg!=null && arg!="") {
   // Input values in object notation
-  nodePath=objFormat(arg);
+  nodePath=objFormat(arg.trim());
   // transform string into array based on pathSeparator
 	nodePathArray=nodePath.split(pathSeparator);
 } else {

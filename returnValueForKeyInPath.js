@@ -22,7 +22,7 @@ if (args[0]!=null) {
 } else if (arg!=null && arg!="") {
   // Input values in object notation
   // Checking the assigned config datasets and parse the node name from input values in object notation
-  keyPath=objFormat(arg).split(pathSeparator);
+  keyPath=objFormat(arg.trim()).split(pathSeparator);
 } else {
   errorFound=true;
   errors.push("ERROR: No arg with key to search provided !");

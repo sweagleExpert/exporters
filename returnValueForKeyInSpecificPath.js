@@ -4,8 +4,6 @@
  * Argument : path.keyName  : example : PRD1/infra/server03/IP
  */
 
-var nodePathNotFound = false;
-var found = false;
 var value;
 var keyPath = [];
 var pathSeparator = "/";

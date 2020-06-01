@@ -44,7 +44,9 @@ var errors_description = '';
 // Parse the object notation: check upon against the RegEx format
 function objFormat(obj) {
   	var matches, index;
-  	// ["Value1","Value2","Value3"]
+  	// {
+  	// 	"nodeNames" : ["Value1","Value2","Value3"]
+  	// }
     var jsonRegex = /\"(.*?)\"/gm;
 	// <nodeNames>
 	//		<nodeName>Value1</nodeName>
@@ -59,8 +61,8 @@ function objFormat(obj) {
     var yamlRegex = /.*\-(.*?)$/gm;
   	// JSON
     if (jsonRegex.test(obj)) {
-		matches = Array.from(obj.matchAll(jsonRegex));
-      	for (index in matches) {nodeNamesArray.push(matches[index][1]);}
+		matches = JSON.parse(obj);
+      	nodeNamesArray = matches.nodeNames;
 		return nodeNamesArray;
     }
     // XML
@@ -116,3 +118,4 @@ if (nodeNamesArray!=null && !errorFound) {
 	  }
 	}
   }
+

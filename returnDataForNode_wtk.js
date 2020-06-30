@@ -6,11 +6,9 @@ var globalRegex = new RegExp(regex,"g");
 var subset = metadataset;
 var nodesWithSameName = 0;
 
-if (args[0]!=null) {
-  retrieveAllData(metadataset, args[0]);
-} else {
-  return replaceKeyTokens(metadataset);
-}
+if (arg) { retrieveAllData(metadataset, arg); }
+else if (args[0] != null) { retrieveAllData(metadataset, args[0]); }
+else { return replaceKeyTokens(metadataset); }
 
 if (nodesWithSameName === 0) {
   return "ERROR: nodeName not found";

@@ -7,21 +7,25 @@
 // Each nodeName in the path must be provided as a separate argument value
 // When no argument is provided then ALL data from the metadata set is returned
 var tokenSeparator = "@@";
+var pathSeparator = ",";
 var regex = tokenSeparator+"(.*?)"+tokenSeparator;
 var globalRegex = new RegExp(regex,"g");
 
 var subset = metadataset;
+var inputs = [];
 
 // we loop through all provided arguments (= nodeNames in the path) and check if the path exist
 // when we get to the last argument we return whole metadataset at that last nodeName.
+if (arg) { inputs = arg.split(pathSeparator); }
+else if (args) { inputs = args; }
 
-for (var i = 0; i < args.length; i++) {
+for (var i = 0; i < inputs.length; i++) {
     	// check if path is valid and if so store all data in subset
-	if (subset.hasOwnProperty(args[i]) === true) {
-		subset = subset[args[i]];
+	if (subset.hasOwnProperty(inputs[i]) === true) {
+		subset = subset[inputs[i]];
 	} else {
 	// if not valid return error message
-		return "ERROR: path not found: " + args[i];
+		return "ERROR: path not found: " + inputs[i];
 	}
 // keep looping through the provided arguments.
 // when last node is reached, subset contains the data we are looking for

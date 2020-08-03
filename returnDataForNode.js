@@ -8,7 +8,7 @@
 //
 // Creator: Dimtris
 // Maintainer: Cyrille
-// Version:   1.1
+// Version:   1.2 - add retro compatibility
 // Support: Sweagle version >= 3.11
 
 // VARIABLES DEFINITION
@@ -49,30 +49,43 @@ for (var i=0; i<cds.length; i++){
 
 // Parse the object notation: check upon against the RegEx format
 function objFormat(obj) {
-  var valueToCheck;
-  // <nodeName>Value</nodeName>
-  var xmlRegex='^\<.*\>(.*)<\/.*\>$';
-  // ---
-  //nodeName: Value
-  var yamlRegex='^---\n.*\:\ (.*)$';
-  switch (obj.charAt(0)) {
-	  // JSON
-    case '{':
-    case '[':
-      var jsonObj=JSON.parse(obj);
-      for (var key in jsonObj) { valueToCheck = jsonObj[key]; }
-      return valueToCheck;
-    // XML
-    case '<':
-      valueToCheck=obj.match(xmlRegex)[1];
-      return valueToCheck;
-    // YAML
-    case '-':
-      valueToCheck=obj.match(yamlRegex)[1];
-      return valueToCheck;
-    default:
-      errorFound=true;
-      errors.push("ERROR: Inputs unexpected!, please provide an object notation (arg). Inputs variables list (args[]) is deprecated.");
+  var matches, index;
+  // {
+  // 	"nodeNames" : ["Value1","Value2","Value3"]
+  // }
+  var jsonRegex = /\"(.*?)\"/gm;
+// <nodeNames>
+//		<nodeName>Value1</nodeName>
+//		<nodeName>Value2</nodeName>
+//		<nodeName>Value3</nodeName>
+//	</nodeNames>
+  var xmlRegex = /\<.*\>(.*?)<\/.*\>/gm;
+// nodeName:
+//	-Value1
+//	-Value2
+//	-Value3
+  var yamlRegex = /.*\-(.*?)$/gm;
+  // JSON
+  if (jsonRegex.test(obj)) {
+  matches = JSON.parse(obj);
+      nodeNamesArray = matches.nodeNames;
+  return nodeNamesArray;
+  }
+  // XML
+  else if (xmlRegex.test(obj)) {
+  matches = Array.from(obj.matchAll(xmlRegex));
+      for (index in matches) {nodeNamesArray.push(matches[index][1]);}
+  return nodeNamesArray;
+  }
+  // YAML
+  else if (yamlRegex.test(obj)) {
+      matches = Array.from(obj.matchAll(yamlRegex));
+      for (index in matches) {nodeNamesArray.push(matches[index][1]);}
+  return nodeNamesArray;
+  }
+  // no object format, return teh string as is
+  else {
+    return obj;
   }
 }
 //console.log("nodeName="+nodeName);

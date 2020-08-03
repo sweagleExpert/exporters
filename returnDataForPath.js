@@ -9,7 +9,7 @@
 //    Output type: configdatasets
 //
 // Creator: Dimtris
-// Version:   1.1
+// Version:   1.2-retro compatibility
 // Support: Sweagle version >= 3.11
 
 // VARIABLES DEFINITION

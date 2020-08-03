@@ -71,9 +71,9 @@ function objFormat(obj) {
     case '-':
       valueToCheck=obj.match(yamlRegex)[1];
       return valueToCheck;
+    // unknown format, return the object as is for retor compatibility
     default:
-      errorFound=true;
-      errors.push("ERROR: Inputs unexpected!, please provide an object notation (arg). Inputs variables list (args[]) is deprecated.");
+      return obj;
   }
 }
 //console.log(subset);

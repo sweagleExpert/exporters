@@ -74,8 +74,8 @@ function objFormat(obj) {
       valueToCheck=obj.match(yamlRegex)[1];
       return valueToCheck;
     default:
-      errorFound=true;
-      errors.push("ERROR: Inputs unexpected!, please provide an object notation (arg). Inputs variables list (args[]) is deprecated.");
+      // if no format detected return the full string to be retro compatible with old releases
+      return obj;
   }
 }
 

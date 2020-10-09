@@ -60,31 +60,31 @@ function objFormat(obj) {
 //		<nodeName>Value3</nodeName>
 //	</nodeNames>
   var xmlRegex = /\<.*\>(.*?)<\/.*\>/gm;
+// ---
 // nodeName:
 //	-Value1
 //	-Value2
 //	-Value3
-  var yamlRegex = /.*\-(.*?)$/gm;
+  var yamlRegex = /^---\n.*\-(.*?)$/gm;
   // JSON
   if (jsonRegex.test(obj)) {
-  matches = JSON.parse(obj);
-      nodeNamesArray = matches.nodeNames;
-  return nodeNamesArray;
+    //console.log("json");
+    matches = JSON.parse(obj);
+    return matches.nodeName;
   }
   // XML
   else if (xmlRegex.test(obj)) {
-  matches = Array.from(obj.matchAll(xmlRegex));
-      for (index in matches) {nodeNamesArray.push(matches[index][1]);}
-  return nodeNamesArray;
+    //console.log("xml");
+    return obj.match(xmlRegex)[1];
   }
   // YAML
   else if (yamlRegex.test(obj)) {
-      matches = Array.from(obj.matchAll(yamlRegex));
-      for (index in matches) {nodeNamesArray.push(matches[index][1]);}
-  return nodeNamesArray;
+    //console.log("yaml");
+    return obj.match(yamlRegex)[1];
   }
-  // no object format, return teh string as is
+  // no object format, return the string as is
   else {
+    //console.log("object");
     return obj;
   }
 }

@@ -59,7 +59,8 @@ function objFormat(obj) {
 	//		<nodeName>Value3</nodeName>
 	//	</nodeNames>
     var xmlRegex = /\<.*\>(.*?)<\/.*\>/gm;
-	// nodeName:
+	// ---
+  // nodeName:
 	//	-Value1
 	//	-Value2
 	//	-Value3

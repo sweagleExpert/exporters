@@ -70,11 +70,8 @@ function objFormat(obj) {
     targetLevel=obj.match(yamlRegex)[1];
     return targetLevel;
    }
-  // Unexpected Inputs
-	else {
-    errorFound=true;
-    errors.push("ERROR: Inputs unexpected!, the arg object must contains an unique integer");
-  }
+   // no object format, return the string as is
+   else { return obj; }
 }
 
 //console.log(superCDS);

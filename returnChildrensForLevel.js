@@ -1,7 +1,7 @@
 // description: Return names of nodes that are childrens of root node at specified level
 
 // returnChildrensForLevel.js
-// Exporter to return the nodes in a MetaDataSet that are at specified level from root
+// Exporter to return the nodes in a CDS that are at specified level from root
 // For example, level 1 is direct childrens, level 2 is grand-childrens, ...
 //
 // This exporter is useful if level X nodes represents different files of a confiquration
@@ -35,16 +35,16 @@ var errorsDescription = '';
 // HANDLERS
 // Inputs parser and checker
 // Input values in object notation
-// Checking the assigned metadatasets and parse the node name from input values in object notation
-if (arg!=null && metadatasets!=null){
-  for (var i=0; i<metadatasets.length; i++){
-    rootNode = Object.keys(metadatasets[i])[0];
-    superCDS[rootNode] = metadatasets[i][rootNode];
+// Checking the assigned metadatasets and parse the node name from input values
+if (arg!=null){
+  for (var i=0; i<cds.length; i++){
+    rootNode = Object.keys(cds[i])[0];
+    superCDS[rootNode] = cds[i][rootNode];
   }
-  targetLevel=objFormat(arg);
+  targetLevel=objFormat(arg.trim());
 } else {
   errorFound=true;
-  errors.push("ERROR: Inputs unexpected!, please provide an object notation (arg). Inputs variables list (args[]) is deprecated.");
+  errors.push("ERROR: No input provided, please provide the node level you want to export);
 }
 
 // Parse the object notation: check upon against the RegEx format

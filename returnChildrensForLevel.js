@@ -36,15 +36,17 @@ var errorsDescription = '';
 // Inputs parser and checker
 // Input values in object notation
 // Checking the assigned metadatasets and parse the node name from input values
-if (arg!=null){
-  for (var i=0; i<cds.length; i++){
-    rootNode = Object.keys(cds[i])[0];
-    superCDS[rootNode] = cds[i][rootNode];
-  }
-  targetLevel=objFormat(arg.trim());
+for (var i=0; i<cds.length; i++){
+  rootNode = Object.keys(cds[i])[0];
+  superCDS[rootNode] = cds[i][rootNode];
+}
+if (arg.trim()!=""){
+  targetLevel = objFormat(arg.trim());
+} else if (args[0]!=null) {
+  targetLevel = args[0];
 } else {
   errorFound=true;
-  errors.push("ERROR: No input provided, please provide the node level you want to export);
+  errors.push("ERROR: No input provided, please provide the node level you want to export");
 }
 
 // Parse the object notation: check upon against the RegEx format
@@ -76,10 +78,14 @@ function objFormat(obj) {
 
 //console.log(superCDS);
 //console.log("targetLevel="+targetLevel);
+//console.log(errorFound);
 
 // MAIN
 // If the node path has been correctly parsed without any error detected so far!
-if (targetLevel!=null && !errorFound) {
+if (errorFound) {
+	errorsDescription = errors.join(', ');
+	return {description: errorsDescription, result:!errorFound};
+} else {
   for (var item in superCDS) {
     if (typeof(superCDS[item]) === 'object') {
       if (currentLevel == targetLevel) {
@@ -91,15 +97,6 @@ if (targetLevel!=null && !errorFound) {
   }
   return nodesFound;
 }
-
-if (errorFound) {
-	// Return the list of all errors trapped
-	errorsDescription = errors.join(', ');
-	return {description: errorsDescription, result:!errorFound};
-} else {
-	return superCDS;
-}
-
 
 // Check if provided subset has children
 function hasChildren(subset) {

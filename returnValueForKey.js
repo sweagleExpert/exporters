@@ -94,7 +94,6 @@ function findObjectKeys(subset, searchKey) {
       if (item === searchKey ) {
         searches[searchKey] = subset[item];
         keysWithSameName = keysWithSameName + 1;
-        break;
       }
     }
   }

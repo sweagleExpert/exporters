@@ -3,7 +3,8 @@
 //
 // Inputs are: the nodes names across all assigned CDS
 //    Input type: an object arg containing the list of node names to map with the filenames to expose for the application
-//		{"configMapGenerator" : [
+//		{"name" : "configmap-name", "namespace" : "configname-namespace",
+//			"configMapGenerator" : [
 //			{"file":"filename1.properties","nodeNames":["node1","node2","node3"]},
 //			{"file":"filename2.properties","nodeNames":["node4"]}
 //		]}
@@ -36,7 +37,8 @@ var configmapHeader = {
   	"apiVersion":"v1",
   	"kind":"ConfigMap",
   	"metadata":{
-      	"name":"{{ .Release.Name }}-samples-config"
+      	"name":"NAME",
+      	"namespace" : "NAMESPACE"
     	},
   	"data": "DATA"
 	};
@@ -49,7 +51,8 @@ if (arg!=null){
       rootNode = Object.keys(cds[i])[0];
       superCDS[rootNode] = cds[i][rootNode];
     }
-    var configMapGenerator = JSON.parse(arg).configMapGenerator;
+    var configMapHeader = JSON.parse(arg);
+  	var configMapGenerator = JSON.parse(arg).configMapGenerator;
 } else {
     errorFound=true;
     errors.push("ERROR: Inputs unexpected!, please provide an object notation (arg). Inputs variables list (args[]) is deprecated.");
@@ -61,6 +64,8 @@ if (arg!=null){
 if (configMapGenerator!=null && !errorFound) {
 	// Generate the ConfigMag: add the header
   	configMap = configmapHeader;
+    configMap.metadata.name = configMapHeader.name;
+    configMap.metadata.namespace = configMapHeader.namespace;
   	// For each entry, search for the data
   	var filedata = {};
 	for (var data in configMapGenerator) {

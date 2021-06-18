@@ -42,7 +42,7 @@ var configmapHeader = {
     	},
   	"data": "DATA"
 	};
-var configmapDataPrefix = "|-";
+var configmapDataPrefix = ">";
 
 // HANDLERS
 // Inputs parser and checker
@@ -77,8 +77,14 @@ if (configMapGenerator!=null && !errorFound) {
         for (var i=0; i<nodeNames.length; i++)	{
           retrieveAllData(superCDS, nodeNames[i]);
         }
-      // build the data structure for each entry
-      filedata[file] = formatting(flattenSubset(subsets, flatSubset),"props");
+      // build the data structure for each entry based upon the file extension
+      var fileExtension = file.split(".")[1];
+      if (fileExtension === "properties" ) {
+        filedata[file] = formatting(flattenSubset(subsets, flatSubset),"props");
+      }
+      else {
+        filedata[file] = formatting(flattenSubset(subsets, flatSubset),"yaml");
+      }
       //reset the temp structure
       subsets = [];
       flatSubset = {};
@@ -133,6 +139,9 @@ function formatting(obj,format){
   for (var item in obj) {
     if (format === "props") {
       longString = longString + item + "=" +obj[item] + "\n";
+    }
+    if (format === "yaml") {
+      longString = longString + item + ": " +obj[item] + "\n";
     }
   }
   return longString;

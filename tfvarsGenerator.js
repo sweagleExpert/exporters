@@ -136,35 +136,40 @@ function retrieveAllData(dataset, nodevalue) {
     }
   }
 }
-// Parse the CDS and build the output
+// Parse the CDS and build the HCL output
 function iterate(obj) {
     for (var key in obj) {
+    //if the key is not the vars{} or not key representing an array
 	//console.log("key: "+key+", value: "+obj[key]+", type: "+Object.prototype.toString.call(obj[key]));
       if (typeof obj[key] === "object") {
-        // Start JSON obj notation
-        text = text +" "+ key + " = " + '{' + "\n";
-        iterate(obj[key]);
-        // End JSON obj notation
-      	text = text +" "+ '}' + "\n";
-      } else {
-        // If the JSON obj contains an array (list)
-        //console.log("key: "+key+", value: "+obj[key]);
-        if (isArray(obj[key]).length > 1) {
-          // Start array notation
-          text = text +"\t"+ returnValueType(key) + " = " + '[' + "\n";
-          // For each array element
-          for (var i=0; i<isArray(obj[key]).length; i++) {
-            text = text +"\t\t"+ returnValueType(isArray(obj[key])[i].trim()) + ',' + "\n";
+        if (!isNormalInteger(key) && key !== "vars") {
+          // If the JSON obj contains an array (list)
+          //console.log("key: "+key+", value: "+obj[key]);
+          if (hasChildren(obj[key])) {
+            // Start array notation
+            text = text +"\t"+ returnValueType(key) + " = " + '[' + "\n";
+            // For each array element
+            for (var i=0; i<nbOfChildren; i++) {
+              if (nbOfChildren == i+1) {text = text +"\t\t"+ returnValueType(isArray(obj[key])[i].trim()) + "\n";}
+              else {text = text +"\t\t"+ returnValueType(isArray(obj[key])[i].trim()) + ',' + "\n";}
+            }
+            // End array notation
+            text = text +"\t"+ '],' + "\n";
           }
-          // End array notation
-          text = text +"\t"+ '],' + "\n";
+          else {
+            text = text +"\t"+ JSON.stringify(key) + " = " + returnValueType(obj[key]) + "," + "\n";
+          }
+          // Start JSON obj notation
+          text = text +" "+ key + " = " + '{' + "\n";
+          iterate(obj[key]);
+          // End JSON obj notation
+          text = text +" "+ '}' + "\n";
         }
+      } else {
         // Else the JSON obj contains K/V pairs
-        else{
-          text = text +"\t"+ JSON.stringify(key) + " = " + returnValueType(obj[key]) + "," + "\n";
+          text = text + key + " = " + returnValueType(obj[key]) + "\n";
         }
       }
-    }
 
     return text;
 }
@@ -176,6 +181,22 @@ function isArray(keyValue) {
   if (lengthArray > 0) { 
     return keyValue.split(separator); 
   }
+}
+
+// Check if provided subset has children
+function hasChildren(subset) {
+  for (var i in subset) {
+    if (typeof(subset[i]) === 'object') { return true; }
+  }
+}
+
+// return the number of children
+function nbOfChildren(subset) {
+  var nbOfChildren = 1;
+  for (var i in subset) {
+    if (typeof(subset[i]) === 'object') { nbOfChildren++; }
+  }
+  return nbOfChildren;
 }
 
 // Return the type of value

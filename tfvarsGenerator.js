@@ -9,7 +9,8 @@
 // Inputs are: the UNIQUE node name across all assigned CDS
 //    Input type: an object arg containing a string
 // Outputs are: data for the specific node name
-//    Output type: a pre-formated *.tfvars file in HCL
+//    Output type: a post-formated *.tfvars file in HCL
+//    https://www.terraform.io/docs/language/expressions/types.html
 //
 // Creator: Cyrille Rivière
 // Version:   1.0 - first exporter release
@@ -30,6 +31,7 @@ var nodeName = "";
 var errorFound = false;
 var errors = [];
 var errors_description = '';
+
 
 // HANDLERS
 // Inputs parser and checker
@@ -104,7 +106,7 @@ if (nodeName!=null && !errorFound) {
     var pretext =  "{ \n";
     var posttext = "}";
     var text="";
-    var text = iterate(subset);
+    var text = json2hcl(subset);
     var returntext = text.replace(/,\s*$/, "");  //remove last comma
     return returntext;
   } else {
@@ -136,71 +138,91 @@ function retrieveAllData(dataset, nodevalue) {
     }
   }
 }
-// Parse the CDS and build the HCL output
-function iterate(obj) {
+// Parse the CDS objects (JSON output) and build the HCL output for tfvars format
+function json2hcl(obj) {
     for (var key in obj) {
-    //if the key is not the vars{} or not key representing an array
-	//console.log("key: "+key+", value: "+obj[key]+", type: "+Object.prototype.toString.call(obj[key]));
+    //if the key value is an object. Process with different uses cases upon children
       if (typeof obj[key] === "object") {
-        if (!isNormalInteger(key) && key !== "vars") {
-          // If the JSON obj contains an array (list)
-          //console.log("key: "+key+", value: "+obj[key]);
-          if (hasChildren(obj[key])) {
-            // Start array notation
-            text = text +"\t"+ returnValueType(key) + " = " + '[' + "\n";
-            // For each array element
-            for (var i=0; i<nbOfChildren; i++) {
-              if (nbOfChildren == i+1) {text = text +"\t\t"+ returnValueType(isArray(obj[key])[i].trim()) + "\n";}
-              else {text = text +"\t\t"+ returnValueType(isArray(obj[key])[i].trim()) + ',' + "\n";}
-            }
-            // End array notation
-            text = text +"\t"+ '],' + "\n";
+        //console.log("key="+key+", obj[key]="+obj[key]);
+        //console.log("key="+key+" hasChildren="+hasChildren(obj[key]));
+        //console.log("key="+key+" hasGrandChildren="+hasGrandChildren(obj[key]));
+        //console.log("key="+key+" getGrandChildren="+getGrandChildren(obj[key]));
+        // If the key value is vars{}: delete it!
+        if (key === 'vars') {
+          delete obj[key];
+        }
+        // If the json obj contains a list (an array, a tuple)
+        else if (hasChildren(obj[key]) && !hasGrandChildren(obj[key])) {
+          var singleNodes = getGrandChildren(obj[key]);
+          // Start array notation
+          text = text +"\t"+ hclValueType(key) + " = " + '[' + "\n";
+          // For each array element
+          for (var i=0; i<singleNodes.length; i++) {
+            //console.log("singleNodes["+i+"]="+singleNodes[i]);
+            if (i==singleNodes.length-1) {text = text +"\t\t"+ hclValueType(singleNodes[i]) + "\n";}
+            else {text = text +"\t\t"+  hclValueType(singleNodes[i]) + ',' + "\n";}
           }
-          else {
-            text = text +"\t"+ JSON.stringify(key) + " = " + returnValueType(obj[key]) + "," + "\n";
-          }
+          // End array notation
+          text = text +"\t"+ '],' + "\n";
+          // Reset the array storing the list of elements
+          singleNodes = [];
+        }
+        // the json obj contains a single K/V pairs
+        else if (!hasChildren(obj[key])) {
+          text = text + JSON.stringify(key) + " = " + hclValueType(obj[key]) + "," + "\n";
+        }
+        // the json obj contains another map/object
+        else {
           // Start JSON obj notation
-          text = text +" "+ key + " = " + '{' + "\n";
-          iterate(obj[key]);
+          text = text + key + " = " + '{' + "\n";
+          json2hcl(obj[key]);
           // End JSON obj notation
           text = text +" "+ '}' + "\n";
         }
-      } else {
-        // Else the JSON obj contains K/V pairs
-          text = text + key + " = " + returnValueType(obj[key]) + "\n";
-        }
       }
-
+      // the K/V pair is not an object
+      else {
+        text = text + key + " = " + hclValueType(obj[key]) + "\n";
+      }  
+    }
     return text;
-}
-
-// Check if the key value is an array
-function isArray(keyValue) {
-  var separator = ",";
-  var lengthArray = keyValue.split(separator).length;
-  if (lengthArray > 0) { 
-    return keyValue.split(separator); 
-  }
 }
 
 // Check if provided subset has children
 function hasChildren(subset) {
   for (var i in subset) {
+    //console.log("Child["+i+"]="+subset[i]);
     if (typeof(subset[i]) === 'object') { return true; }
   }
+  return false;
 }
 
-// return the number of children
-function nbOfChildren(subset) {
-  var nbOfChildren = 1;
+// Check if provided subset has grandchildren
+function hasGrandChildren(subset) {
   for (var i in subset) {
-    if (typeof(subset[i]) === 'object') { nbOfChildren++; }
+    //console.log("GrandChild["+i+"]="+subset[i]);
+    if (typeof(subset[i]) === 'object') { 
+    	if (hasChildren(subset[i])) {return true;}
+    }
   }
-  return nbOfChildren;
+  return false;
 }
 
-// Return the type of value
-function returnValueType (keyValue) {
+// Return the list of single nodes (that has no children)
+function getGrandChildren(subset) {
+  var singleNodes = []; 
+  for (var item in subset) {
+      if (typeof(subset[item]) === 'object') {
+           if (!hasGrandChildren(subset[item])) {
+               singleNodes.push(item);
+           }
+      }
+  }
+  return singleNodes;
+}
+
+// Return the HCL type of value
+function hclValueType (keyValue) {
   if (keyValue == "true" || keyValue == "false") {Boolean(keyValue);}
   else if (isNormalInteger(keyValue)) {return Number(keyValue);}
   else {return JSON.stringify(keyValue);}

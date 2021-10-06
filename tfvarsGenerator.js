@@ -181,7 +181,10 @@ function json2hcl(obj) {
       else {
         // the K/V pair is included into a map/object
         if (hasParent(subset,key)) {
-          text = text + "\t" + JSON.stringify(key) + " = " + hclValueType(obj[key]) + "," + "\n";
+          var lastKey = Object.keys(obj)[Object.keys(obj).length-1];
+          // If it is the last key of the map/object
+          if (key===lastKey) {text = text + "\t" + JSON.stringify(key) + " = " + hclValueType(obj[key]) + "\n";}
+          else {text = text + "\t" + JSON.stringify(key) + " = " + hclValueType(obj[key]) + "," + "\n";}
         } 
         // the K/V pair is not included into a map/object
         else {

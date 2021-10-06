@@ -31,7 +31,8 @@ var nodeName = "";
 var errorFound = false;
 var errors = [];
 var errors_description = '';
-
+// Others
+var parent=null;
 
 // HANDLERS
 // Inputs parser and checker
@@ -167,10 +168,6 @@ function json2hcl(obj) {
           // Reset the array storing the list of elements
           singleNodes = [];
         }
-        // the json obj contains a single K/V pairs
-        else if (!hasChildren(obj[key])) {
-          text = text + JSON.stringify(key) + " = " + hclValueType(obj[key]) + "," + "\n";
-        }
         // the json obj contains another map/object
         else {
           // Start JSON obj notation
@@ -182,10 +179,31 @@ function json2hcl(obj) {
       }
       // the K/V pair is not an object
       else {
+        // the K/V pair is included into a map/object
+        if (hasParent(subset,key)) {
+          text = text + "\t" + JSON.stringify(key) + " = " + hclValueType(obj[key]) + "," + "\n";
+        } 
+        // the K/V pair is not included into a map/object
+        else {
         text = text + key + " = " + hclValueType(obj[key]) + "\n";
+        }
       }  
     }
     return text;
+}
+
+// Check if provided subset has children
+function hasParent(subset,key) {
+  for (var i in subset) {
+    //console.log("Parent["+i+"]="+subset[i]);
+    if (typeof(subset[i]) === 'object') {
+      hasParent(subset[i],key);
+    }
+    else {
+     if (i===key) {return false;} 
+    }
+  }
+  return true;
 }
 
 // Check if provided subset has children

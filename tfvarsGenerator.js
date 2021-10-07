@@ -2,9 +2,8 @@
 // tfvarsGenerator.js
 //
 // PREREQUISITES
-//	A sequence of values or a list must represented as:
-// 	keyName = keyValue1,keyValue2,keyValue3
-//  here the seperator of the string value is comma ","
+//	Import the config data as JSON format.
+//  You can use the hcl2json tool to convert Terraform variables: https://github.com/tmccombs/hcl2json
 //
 // Inputs are: the UNIQUE node name across all assigned CDS
 //    Input type: an object arg containing a string

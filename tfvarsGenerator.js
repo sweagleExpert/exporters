@@ -244,7 +244,7 @@ function getGrandChildren(subset) {
 
 // Return the HCL type of value
 function hclValueType (keyValue) {
-  if (keyValue == "true" || keyValue == "false") {Boolean(keyValue);}
+  if (keyValue == "true" || keyValue == "false") {return Boolean(keyValue);}
   else if (isNormalInteger(keyValue)) {return Number(keyValue);}
   else {return JSON.stringify(keyValue);}
 }
